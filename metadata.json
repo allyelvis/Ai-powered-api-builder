@@ -1,0 +1,5 @@
+{
+  "name": "Rest API Server Side Builder",
+  "description": "An application that helps you build a REST API server-side by defining models and endpoints, and then generating the Node.js/Express code using the Gemini API.",
+  "requestFramePermissions": []
+}

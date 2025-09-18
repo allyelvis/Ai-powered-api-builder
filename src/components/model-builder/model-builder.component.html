@@ -1,0 +1,65 @@
+<div class="bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-700">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold text-gray-200">1. Define Models</h2>
+    <button (click)="toggleForm()" class="bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 font-bold py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
+      {{ showForm() ? 'Cancel' : 'Add Model' }}
+    </button>
+  </div>
+  
+  @if (showForm()) {
+    <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-600 mb-4">
+      <!-- Model Name Input -->
+      <div class="mb-4">
+        <label for="modelName" class="block text-sm font-medium text-gray-300 mb-1">Model Name</label>
+        <input id="modelName" type="text" [value]="modelName()" (input)="modelName.set($event.target.value)" placeholder="e.g., User" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+      </div>
+      
+      <!-- Fields Section -->
+      <h3 class="text-lg font-semibold text-gray-300 mb-2">Fields</h3>
+      
+      @for (field of fields(); track field.name) {
+        <div class="flex items-center justify-between bg-gray-700/50 p-2 rounded-md mb-2">
+          <div>
+            <span class="font-mono text-cyan-300">{{ field.name }}</span>
+            <span class="text-gray-400">: </span>
+            <span class="font-mono text-purple-300">{{ field.type }}</span>
+          </div>
+          <button (click)="removeField(field.name)" class="text-red-400 hover:text-red-300">&times;</button>
+        </div>
+      }
+
+      <!-- Add Field Form -->
+      <div class="flex gap-2 mt-2">
+        <input type="text" [value]="newFieldName()" (input)="newFieldName.set($event.target.value)" placeholder="Field Name" class="flex-grow bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+        <select [value]="newFieldType()" (change)="newFieldType.set($event.target.value)" class="bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+          <option value="string">string</option>
+          <option value="number">number</option>
+          <option value="boolean">boolean</option>
+        </select>
+        <button (click)="addField()" class="bg-teal-500/80 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">+</button>
+      </div>
+
+      <!-- Save Model Button -->
+      <button (click)="saveModel()" [disabled]="!modelName() || fields().length === 0" class="mt-4 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
+        Save Model
+      </button>
+    </div>
+  }
+
+  <!-- List of Added Models -->
+  @if (models().length > 0) {
+    <div class="space-y-3">
+      @for(model of models(); track model.id) {
+        <div class="bg-gray-700/50 p-3 rounded-lg flex justify-between items-center">
+          <div>
+            <p class="font-bold text-teal-300">{{ model.name }}</p>
+            <p class="text-sm text-gray-400 font-mono">{{ getFieldNames(model.fields) }}</p>
+          </div>
+          <button (click)="modelRemoved.emit(model.id)" class="text-red-400 hover:text-red-300 text-xl font-bold px-2">&times;</button>
+        </div>
+      }
+    </div>
+  } @else if (!showForm()) {
+     <p class="text-gray-500 text-center py-4">No models defined yet. Click "Add Model" to start.</p>
+  }
+</div>
