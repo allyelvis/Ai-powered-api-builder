@@ -10,6 +10,7 @@ export class ModelBuilderComponent {
   models = input.required<Model[]>();
   modelAdded = output<Model>();
   modelRemoved = output<number>();
+  modelUpdated = output<Model>();
 
   modelName = signal('');
   fields = signal<Field[]>([]);
@@ -17,6 +18,7 @@ export class ModelBuilderComponent {
   newFieldType = signal<'string' | 'number' | 'boolean'>('string');
   
   showForm = signal(false);
+  editingModelId = signal<number | null>(null);
 
   addField() {
     const name = this.newFieldName().trim();
@@ -30,23 +32,38 @@ export class ModelBuilderComponent {
     this.fields.update(currentFields => currentFields.filter(f => f.name !== fieldName));
   }
   
-  toggleForm() {
-    this.showForm.update(v => !v);
-    if (!this.showForm()) {
-      this.resetForm();
-    }
+  startAddNewModel() {
+    this.resetForm();
+    this.showForm.set(true);
+  }
+
+  cancelForm() {
+    this.resetForm();
+    this.showForm.set(false);
+  }
+
+  startEditing(model: Model) {
+    this.editingModelId.set(model.id);
+    this.modelName.set(model.name);
+    this.fields.set([...model.fields]);
+    this.showForm.set(true);
   }
 
   saveModel() {
     const name = this.modelName().trim();
     if (name && this.fields().length > 0) {
-      this.modelAdded.emit({
-        id: Date.now(),
+      const modelData: Model = {
+        id: this.editingModelId() ?? Date.now(),
         name,
         fields: this.fields()
-      });
-      this.resetForm();
-      this.showForm.set(false);
+      };
+
+      if (this.editingModelId()) {
+        this.modelUpdated.emit(modelData);
+      } else {
+        this.modelAdded.emit(modelData);
+      }
+      this.cancelForm();
     }
   }
 
@@ -55,6 +72,7 @@ export class ModelBuilderComponent {
     this.fields.set([]);
     this.newFieldName.set('');
     this.newFieldType.set('string');
+    this.editingModelId.set(null);
   }
 
   getFieldNames(fields: Field[]): string {

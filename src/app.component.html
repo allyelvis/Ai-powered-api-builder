@@ -10,8 +10,16 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Left Column: Builders -->
       <div class="flex flex-col gap-8">
-        <app-model-builder [models]="models()" (modelAdded)="addModel($event)" (modelRemoved)="removeModel($event)"></app-model-builder>
-        <app-endpoint-builder [endpoints]="endpoints()" (endpointAdded)="addEndpoint($event)" (endpointRemoved)="removeEndpoint($event)"></app-endpoint-builder>
+        <app-model-builder 
+          [models]="models()" 
+          (modelAdded)="addModel($event)" 
+          (modelRemoved)="removeModel($event)"
+          (modelUpdated)="updateModel($event)"></app-model-builder>
+        <app-endpoint-builder 
+          [endpoints]="endpoints()" 
+          (endpointAdded)="addEndpoint($event)" 
+          (endpointRemoved)="removeEndpoint($event)"
+          (endpointUpdated)="updateEndpoint($event)"></app-endpoint-builder>
       </div>
 
       <!-- Right Column: Code Generation and Viewer -->

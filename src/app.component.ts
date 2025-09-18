@@ -24,8 +24,20 @@ export class AppComponent {
     this.models.update(currentModels => [...currentModels, model]);
   }
 
+  updateModel(updatedModel: Model) {
+    this.models.update(currentModels =>
+      currentModels.map(model => (model.id === updatedModel.id ? updatedModel : model))
+    );
+  }
+
   addEndpoint(endpoint: Endpoint) {
     this.endpoints.update(currentEndpoints => [...currentEndpoints, endpoint]);
+  }
+  
+  updateEndpoint(updatedEndpoint: Endpoint) {
+    this.endpoints.update(currentEndpoints =>
+      currentEndpoints.map(endpoint => (endpoint.id === updatedEndpoint.id ? updatedEndpoint : endpoint))
+    );
   }
 
   removeModel(id: number) {
