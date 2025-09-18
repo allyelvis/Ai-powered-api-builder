@@ -18,6 +18,10 @@ export class AppComponent {
   isLoading = signal<boolean>(false);
   error = signal<string | null>(null);
 
+  // Generation options
+  useDatabase = signal<boolean>(false);
+  useAuth = signal<boolean>(false);
+
   constructor(private geminiService: GeminiService) {}
 
   addModel(model: Model) {
@@ -54,7 +58,11 @@ export class AppComponent {
     this.generatedCode.set('');
 
     try {
-      const code = await this.geminiService.generateServerCode(this.models(), this.endpoints());
+      const options = {
+        useDatabase: this.useDatabase(),
+        useAuth: this.useAuth(),
+      };
+      const code = await this.geminiService.generateServerCode(this.models(), this.endpoints(), options);
       // Clean up the response from Gemini to ensure it's just code
       const cleanedCode = code.replace(/^```javascript\n|```$/g, '').trim();
       this.generatedCode.set(cleanedCode);

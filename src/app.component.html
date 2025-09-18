@@ -25,15 +25,34 @@
       <!-- Right Column: Code Generation and Viewer -->
       <div class="flex flex-col">
         <div class="bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-700 sticky top-8">
-          <h2 class="text-2xl font-bold mb-4 text-gray-200">Generate Your Code</h2>
-          <p class="text-gray-400 mb-6">Once you've defined your models and endpoints, click the button below to generate your Express.js server.</p>
+          <h2 class="text-2xl font-bold mb-4 text-gray-200">3. Generate Your Code</h2>
+          <p class="text-gray-400 mb-4">Select your desired options and click the button to generate your Express.js server.</p>
           
+          <!-- Generation Options -->
+          <h3 class="text-lg font-semibold text-gray-300 mb-3">Generation Options</h3>
+          <div class="space-y-3 mb-6">
+            <label class="flex items-center p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors">
+              <input type="checkbox" [checked]="useDatabase()" (change)="useDatabase.set($event.target.checked)" class="h-4 w-4 rounded bg-gray-900 border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800">
+              <span class="ml-3 text-sm text-gray-200">
+                Add Database Integration
+                <span class="block text-xs text-gray-400">Generates Mongoose schemas and uses MongoDB for persistence.</span>
+              </span>
+            </label>
+            <label class="flex items-center p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors">
+              <input type="checkbox" [checked]="useAuth()" (change)="useAuth.set($event.target.checked)" class="h-4 w-4 rounded bg-gray-900 border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800">
+              <span class="ml-3 text-sm text-gray-200">
+                Add Basic Authentication
+                <span class="block text-xs text-gray-400">Protects endpoints with a simple API key middleware.</span>
+              </span>
+            </label>
+          </div>
+
           <button 
             (click)="handleGenerateCode()"
             [disabled]="isLoading() || models().length === 0 || endpoints().length === 0"
             class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center shadow-lg">
             @if (isLoading()) {
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
